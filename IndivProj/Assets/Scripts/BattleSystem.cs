@@ -2,11 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum BattleState { START, MOVESELECT, PERFORMINGMOVES, WON, LOST }
+public enum BattleState { START, MOVESELECT, PERFORMINGMOVES, NEXTPOKEMONSELECT, WON, LOST }
 
 public class BattleSystem : MonoBehaviour
 {
-
     public BattleState state;
 
     public GameObject playerPrefab;
@@ -92,27 +91,54 @@ public class BattleSystem : MonoBehaviour
 
     void MoveCalcs()
     {
+        float damage = 0;
         // check which pokemon is faster
         if (player.currentPokemon.speed > enemy.currentPokemon.speed)
         {
-            player.currentPokemon.calculateDamage(enemy.currentPokemon, currentlySelectedMove);
-
+            damage = player.currentPokemon.calculateDamage(enemy.currentPokemon, currentlySelectedMove);
+            enemy.currentPokemon.currentHealth -= damage;
             Debug.Log("EnemyIsSlower!!");
+            if (enemy.currentPokemon.currentHealth > 0)
+            {
+                damage = enemy.currentPokemon.calculateDamage(player.currentPokemon, enemy.currentPokemon.pokemonMoves[0]);
+                player.currentPokemon.currentHealth -= damage;
+                if(player.currentPokemon.currentHealth <= 0)
+                {
+                    state = BattleState.NEXTPOKEMONSELECT;
+                    return;
+                }
+                
+            }
+            else
+            {
+                state = BattleState.NEXTPOKEMONSELECT;
+                return;
+            }            
 
         }
         else
         {
-            Debug.Log("EnemyIsFaster");
-            enemy.currentPokemon.calculateDamage(player.currentPokemon, enemy.currentPokemon.pokemonMoves[0]);
+            damage = enemy.currentPokemon.calculateDamage(player.currentPokemon, enemy.currentPokemon.pokemonMoves[0]);
+            player.currentPokemon.currentHealth -= damage;
+            if (player.currentPokemon.currentHealth <= 0)
+            {
+                state = BattleState.NEXTPOKEMONSELECT;
+                return;
+            }
+            else
+            {
+                damage = player.currentPokemon.calculateDamage(enemy.currentPokemon, currentlySelectedMove);
+                enemy.currentPokemon.currentHealth -= damage;
+                if(enemy.currentPokemon.currentHealth <= 0)
+                {
+                    state = BattleState.NEXTPOKEMONSELECT;
+                    return;
+                }
+            }
+
+
         }
 
         state = BattleState.MOVESELECT;
-        
-
     }
-
-
-
-
-
 }
