@@ -7,6 +7,7 @@ public class Move : MonoBehaviour
     // Start is called before the first frame update
 
     public string type;
+    public string moveName;
     public bool attackingMove;
     public float movePower;
 
