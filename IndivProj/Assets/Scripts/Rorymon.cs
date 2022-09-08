@@ -15,12 +15,13 @@ public class Rorymon : MonoBehaviour
     public float speed;
     public float maxHealth;
     public float currentHealth;
-    public bool hasFainted = false;
+    public bool hasFainted;
 
     // Start is called before the first frame update
     void Start()
     {
         currentHealth = maxHealth;
+        hasFainted = false;
     }
 
     // Update is called once per frame

@@ -55,5 +55,5 @@ MonoBehaviour:
   defence: 10
   speed: 10
   maxHealth: 100
-  currentHealth: 30
-  hasFainted: 0
+  currentHealth: 100
+  hasFainted: 1

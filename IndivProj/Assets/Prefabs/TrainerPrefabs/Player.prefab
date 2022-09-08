@@ -44,6 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb4df9d44efc57b4d8a24a3da40dff0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pokemonPrefabs:
+  - {fileID: 8850507455275680029, guid: 33b939e8b6399024dae78248e171bc88, type: 3}
+  - {fileID: 8850507455275680029, guid: 24470ddfa4ea8624da5893556c3c50e2, type: 3}
+  - {fileID: 8850507455275680029, guid: b787a20363845274d8e81b312ed68f05, type: 3}
+  - {fileID: 8850507455275680029, guid: 57433dfa2c96e7347926aec759379b03, type: 3}
+  - {fileID: 8850507455275680029, guid: 04888302adb96b34d94baa87273562c0, type: 3}
+  - {fileID: 8850507455275680029, guid: af45e758e551cf94882a9bfe6750c142, type: 3}
   TrainerPokemon:
   - {fileID: 957669855227509220, guid: 33b939e8b6399024dae78248e171bc88, type: 3}
   - {fileID: 957669855227509220, guid: 24470ddfa4ea8624da5893556c3c50e2, type: 3}
