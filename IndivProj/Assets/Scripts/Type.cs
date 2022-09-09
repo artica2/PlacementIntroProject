@@ -8,7 +8,6 @@ public class Type : MonoBehaviour
     public List<Type> resistedBy = new List<Type>();
     public List<Type> doesntAffect = new List<Type>();
     
-
     // Start is called before the first frame update
     void Start()
     {

@@ -110,24 +110,26 @@ public class BattleSystem : MonoBehaviour
         }
 
         // Update the UI to reflect the game state
-        playerName.text = player.currentPokemon.name;
-        enemyName.text = enemy.currentPokemon.name;
+        playerName.text = player.currentPokemon.rorymonName;
+        enemyName.text = enemy.currentPokemon.rorymonName;
 
         playerHealth.value = player.currentPokemon.currentHealth / player.currentPokemon.maxHealth;
         enemyHealth.value = enemy.currentPokemon.currentHealth / enemy.currentPokemon.maxHealth;
         // set the currently selected move to stand out as green 
         for (int i = 0; i < 4; i++) {
+            if (player.currentPokemon.pokemonMoves[i]){
             moveText[i].text = player.currentPokemon.pokemonMoves[i].moveName;
 
             if (player.currentPokemon.pokemonMoves[i].attackingMove) {
                 moveText[i].text = moveText[i].text + "          " + player.currentPokemon.pokemonMoves[i].movePower;
             }
-         
+
             if (player.currentPokemon.pokemonMoves[i] == currentlySelectedMove) {
                 moveText[i].color = green;
             } else {
                 moveText[i].color = black;
             }
+        }
 
         }
 
@@ -223,10 +225,10 @@ public class BattleSystem : MonoBehaviour
         // tracks whose moving first
         bool playerMovesFirst = true;
 
-        if (player.currentPokemon.speed > enemy.currentPokemon.speed) { // player is faster
+        if (player.currentPokemon.speed.value > enemy.currentPokemon.speed.value) { // player is faster
             playerMovesFirst = true;
         } 
-        else if (player.currentPokemon.speed < enemy.currentPokemon.speed) { // enemy is faster
+        else if (player.currentPokemon.speed.value < enemy.currentPokemon.speed.value) { // enemy is faster
             playerMovesFirst= false;
         } else { // Speed tie
             playerMovesFirst = Utility.instance.ProbabilityGenerator(50); // 50/50 chance
@@ -236,15 +238,18 @@ public class BattleSystem : MonoBehaviour
         // check which pokemon is faster
         if (playerMovesFirst)
         {
-            // calculate and inflict damage to enemy
-            damage = player.currentPokemon.calculateDamage(enemy.currentPokemon, currentlySelectedMove);
-            enemy.currentPokemon.currentHealth -= damage;
+            if (currentlySelectedMove.effect == moveEffect.offensive) {
+                // calculate and inflict damage to enemy
+                damage = player.currentPokemon.calculateDamage(enemy.currentPokemon, currentlySelectedMove);
+                enemy.currentPokemon.currentHealth -= damage;
+            }
 
             // print to UI
             actionText1.text = "Player's " + player.currentPokemon.name + " Attacked with " + currentlySelectedMove.moveName + " dealing " + damage + " damage!";
           
             if (enemy.currentPokemon.currentHealth > 0) // if enemy is still alive to have their move
             {
+
                 // calculate and inflict damage to player pokemon
                 damage = enemy.currentPokemon.calculateDamage(player.currentPokemon, enemy.currentPokemon.pokemonMoves[0]);
                 player.currentPokemon.currentHealth -= damage;
@@ -286,8 +291,10 @@ public class BattleSystem : MonoBehaviour
             }
             else
             {
-                damage = player.currentPokemon.calculateDamage(enemy.currentPokemon, currentlySelectedMove);
-                enemy.currentPokemon.currentHealth -= damage;
+                if (currentlySelectedMove.effect == moveEffect.offensive) {
+                    damage = player.currentPokemon.calculateDamage(enemy.currentPokemon, currentlySelectedMove);
+                    enemy.currentPokemon.currentHealth -= damage;
+                }
 
                 actionText2.text = "Player's " + player.currentPokemon.name + " Attacked with " + currentlySelectedMove.moveName + " dealing " + damage + " damage!";
                 if (enemy.currentPokemon.currentHealth <= 0)

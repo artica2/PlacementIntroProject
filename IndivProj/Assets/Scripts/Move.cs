@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum moveEffect { offensive, stat }
+
 public class Move : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -10,6 +12,10 @@ public class Move : MonoBehaviour
     public string moveName;
     public bool attackingMove;
     public float movePower;
+
+    public moveEffect effect;
+
+    public bool isPhysical;
 
     void Start()
     {
