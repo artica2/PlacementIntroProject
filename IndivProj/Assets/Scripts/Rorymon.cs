@@ -7,6 +7,8 @@ public class Rorymon : MonoBehaviour
 
     public Move[] pokemonMoves = new Move[4];
 
+    public Type rorymonType;
+
     public string name;
     public string type;
 
@@ -34,6 +36,8 @@ public class Rorymon : MonoBehaviour
     {
         float damage = 0;
         damage = attack / DefensiveMon.defence * moveUsed.movePower;
+
+        
         Debug.Log("Damage calculated: " + damage);
 
         return damage;

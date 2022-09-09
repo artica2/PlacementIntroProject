@@ -6,7 +6,7 @@ public class Move : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    public string type;
+    public Type moveType;
     public string moveName;
     public bool attackingMove;
     public float movePower;
@@ -20,5 +20,30 @@ public class Move : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public float CalculateMultiplier(Rorymon rorymon) {
+
+        float multiplier = 1f;
+
+        foreach (Type T in moveType.effectiveAgainst) {
+            if (T == rorymon.rorymonType) {
+                multiplier *= 2f;
+            }
+        }
+
+        foreach (Type T in moveType.resistedBy) {
+            if (T == rorymon.rorymonType) {
+                multiplier *= 0.5f;
+            }
+        }
+
+        foreach (Type T in moveType.doesntAffect) {
+            if (T == rorymon.rorymonType) {
+                multiplier *= 0.0f;
+            }
+        }
+
+        return 0;
     }
 }

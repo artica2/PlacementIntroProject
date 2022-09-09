@@ -118,6 +118,10 @@ public class BattleSystem : MonoBehaviour
         // set the currently selected move to stand out as green 
         for (int i = 0; i < 4; i++) {
             moveText[i].text = player.currentPokemon.pokemonMoves[i].moveName;
+
+            if (player.currentPokemon.pokemonMoves[i].attackingMove) {
+                moveText[i].text = moveText[i].text + "          " + player.currentPokemon.pokemonMoves[i].movePower;
+            }
          
             if (player.currentPokemon.pokemonMoves[i] == currentlySelectedMove) {
                 moveText[i].color = green;
