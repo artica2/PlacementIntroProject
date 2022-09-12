@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum StatType { attackT, defenceT, specialAttackT, specialDefenceT, speedT }
+
 public class Stat
 {
     public float baseStat;
@@ -9,6 +11,8 @@ public class Stat
     public int stage;
 
     public float value;
+
+    public StatType statType;
 
     // Start is called before the first frame update
     void Start()

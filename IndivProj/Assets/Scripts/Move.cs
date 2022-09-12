@@ -17,9 +17,13 @@ public class Move : MonoBehaviour
 
     public bool isPhysical;
 
+    public StatType statToChange;
+
+    public int stageToChange;
+
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame

@@ -69,6 +69,7 @@ public class BattleSystem : MonoBehaviour
 
     private void Update()
     {
+        
         if (state == BattleState.START)
         {
             SetupBattle(); // set up the battle
@@ -377,6 +378,18 @@ public class BattleSystem : MonoBehaviour
             if (!pokemonLeft) {
                 state = BattleState.WON;
             }
+        }
+    }
+
+    private void ExcecuteUI() {
+        if (state == BattleState.MOVESELECT) {
+
+        }
+        if (state == BattleState.PERFORMINGMOVES) {
+
+        }
+        if(state == BattleState.NEXTPOKEMONSELECT) {
+            
         }
     }
 

@@ -32,6 +32,13 @@ public class Rorymon : MonoBehaviour
         currentHealth = maxHealth;
         hasFainted = false;
 
+        attack.statType = StatType.attackT;
+        defence.statType = StatType.defenceT;
+        specialAttack.statType = StatType.specialAttackT;
+        specialDefence.statType = StatType.specialDefenceT;
+        speed.statType = StatType.speedT;
+
+
         attack.baseStat = attackStat;
         defence.baseStat = defenceStat;
         specialAttack.baseStat = specialAttackStat;
@@ -64,8 +71,45 @@ public class Rorymon : MonoBehaviour
         Debug.Log("Damage calculated: " + damage);
 
         return damage;
-        
-
     }
 
+    public void lowerStat(Rorymon DefensiveMon, bool TargetsOtherMon, Move moveUsed) {
+        if (moveUsed.effect == moveEffect.stat) {
+            if (moveUsed.statToChange == StatType.attackT) {
+                if (TargetsOtherMon) {
+                    DefensiveMon.attack.stage += moveUsed.stageToChange;
+                } else {
+                    attack.stage += moveUsed.stageToChange;
+                }
+            }
+            if (moveUsed.statToChange == StatType.defenceT) {
+                if (TargetsOtherMon) {
+                    DefensiveMon.defence.stage += moveUsed.stageToChange;
+                } else {
+                    defence.stage += moveUsed.stageToChange;
+                }
+            }
+            if (moveUsed.statToChange == StatType.specialAttackT) {
+                if (TargetsOtherMon) {
+                    DefensiveMon.specialAttack.stage += moveUsed.stageToChange;
+                } else {
+                    specialAttack.stage += moveUsed.stageToChange;
+                }
+            }
+            if (moveUsed.statToChange == StatType.specialDefenceT) {
+                if (TargetsOtherMon) {
+                    DefensiveMon.specialDefence.stage += moveUsed.stageToChange;
+                } else {
+                    specialDefence.stage += moveUsed.stageToChange;
+                }
+            }
+            if (moveUsed.statToChange == StatType.speedT) {
+                if (TargetsOtherMon) {
+                    DefensiveMon.speed.stage += moveUsed.stageToChange;
+                } else {
+                    speed.stage += moveUsed.stageToChange;
+                }
+            }
+        }
+    }
 }
