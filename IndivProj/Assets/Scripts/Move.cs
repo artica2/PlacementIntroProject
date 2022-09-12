@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum moveEffect { offensive, stat }
+// public enum moveEffect { offensive, stat }
 
 public class Move : MonoBehaviour
 {
@@ -11,15 +11,16 @@ public class Move : MonoBehaviour
     public Type moveType;
     public string moveName;
     public bool attackingMove;
+    public bool statMove;
     public float movePower;
-
-    public moveEffect effect;
 
     public bool isPhysical;
 
     public StatType statToChange;
 
     public int stageToChange;
+
+    public bool targetsOtherMon;
 
     void Start()
     {

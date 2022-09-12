@@ -78,7 +78,7 @@ public class BattleSystem : MonoBehaviour
         {
             // set up the UI
             // set the move UI to be active
-            for(int i = 0; i < 4; i++) {
+            for (int i = 0; i < 4; i++) {
                 moveText[i].gameObject.SetActive(true);
 
             }
@@ -239,24 +239,55 @@ public class BattleSystem : MonoBehaviour
         // check which pokemon is faster
         if (playerMovesFirst)
         {
-            if (currentlySelectedMove.effect == moveEffect.offensive) {
+            if (currentlySelectedMove.attackingMove) {
                 // calculate and inflict damage to enemy
                 damage = player.currentPokemon.calculateDamage(enemy.currentPokemon, currentlySelectedMove);
                 enemy.currentPokemon.currentHealth -= damage;
-            }
+                actionText1.text = "Player's " + player.currentPokemon.rorymonName + " Attacked with " + currentlySelectedMove.moveName + " dealing " + damage + " damage!";
 
-            // print to UI
-            actionText1.text = "Player's " + player.currentPokemon.name + " Attacked with " + currentlySelectedMove.moveName + " dealing " + damage + " damage!";
+            }
+            if (currentlySelectedMove.statMove) {
+                player.currentPokemon.lowerStat(enemy.currentPokemon, currentlySelectedMove);
+                actionText1.text = "Player's " + player.currentPokemon.rorymonName + " Used: " + currentlySelectedMove.moveName;
+                if (currentlySelectedMove.stageToChange > 0) {
+                    actionText1.text = actionText1.text + " increasing ";
+                } else if (currentlySelectedMove.stageToChange < 0) {
+                    actionText1.text = actionText1.text + " decreasing ";
+                }
+                if (currentlySelectedMove.targetsOtherMon) {
+                    actionText1.text = actionText1.text + " enemy's " + enemy.currentPokemon.rorymonName + "'s ";
+                } else if (!currentlySelectedMove.targetsOtherMon) {
+                    actionText1.text = actionText1.text + " player's " + player.currentPokemon.rorymonName + "'s ";
+                }
+                actionText1.text = actionText1.text + currentlySelectedMove.statToChange.ToString();
+                   
+            }        
           
             if (enemy.currentPokemon.currentHealth > 0) // if enemy is still alive to have their move
             {
+                if (enemy.currentPokemon.pokemonMoves[0].attackingMove) {
+                    // calculate and inflict damage to player pokemon
+                    damage = enemy.currentPokemon.calculateDamage(player.currentPokemon, enemy.currentPokemon.pokemonMoves[0]);
+                    player.currentPokemon.currentHealth -= damage;
+                    // print to UI
+                    actionText2.text = "Enemy's " + enemy.currentPokemon.name + " Attacked with " + enemy.currentPokemon.pokemonMoves[0].moveName + " dealing " + damage + " damage!";
 
-                // calculate and inflict damage to player pokemon
-                damage = enemy.currentPokemon.calculateDamage(player.currentPokemon, enemy.currentPokemon.pokemonMoves[0]);
-                player.currentPokemon.currentHealth -= damage;
-
-                // print to UI
-                actionText2.text = "Enemy's " + enemy.currentPokemon.name + " Attacked with " + enemy.currentPokemon.pokemonMoves[0].moveName + " dealing " + damage + " damage!";
+                }
+                if (enemy.currentPokemon.pokemonMoves[0].statMove) {
+                    enemy.currentPokemon.lowerStat(player.currentPokemon, enemy.currentPokemon.pokemonMoves[0]);
+                    actionText2.text = "Enemy's " + enemy.currentPokemon.rorymonName + " Used: " + enemy.currentPokemon.pokemonMoves[0].moveName;
+                    if (enemy.currentPokemon.pokemonMoves[0].stageToChange > 0) {
+                        actionText2.text = actionText2.text + " increasing ";
+                    } else if (enemy.currentPokemon.pokemonMoves[0].stageToChange < 0) {
+                        actionText2.text = actionText2.text + " decreasing ";
+                    }
+                    if (enemy.currentPokemon.pokemonMoves[0].targetsOtherMon) {
+                        actionText2.text = actionText2.text + " Player's " + player.currentPokemon.rorymonName + "'s ";
+                    } else if (!enemy.currentPokemon.pokemonMoves[0].targetsOtherMon) {
+                        actionText2.text = actionText2.text + " enemy's " + enemy.currentPokemon.rorymonName + "'s ";
+                    }
+                    actionText2.text = actionText2.text + enemy.currentPokemon.pokemonMoves[0].statToChange.ToString();
+                }
 
                 if(player.currentPokemon.currentHealth <= 0) // if the player pokemon has died
                 {
@@ -276,12 +307,28 @@ public class BattleSystem : MonoBehaviour
                 return;
             }            
         }
-        else
+        else // enemy is faster than player
         {
-            damage = enemy.currentPokemon.calculateDamage(player.currentPokemon, enemy.currentPokemon.pokemonMoves[0]);
-            player.currentPokemon.currentHealth -= damage;
-            actionText1.text = "Enemy's " + enemy.currentPokemon.name + " Attacked with " + enemy.currentPokemon.pokemonMoves[0].moveName + " dealing " + damage + " damage!";
-
+            if (enemy.currentPokemon.pokemonMoves[0].attackingMove) {
+                damage = enemy.currentPokemon.calculateDamage(player.currentPokemon, enemy.currentPokemon.pokemonMoves[0]);
+                player.currentPokemon.currentHealth -= damage;                
+                actionText1.text = "Enemy's " + enemy.currentPokemon.name + " Attacked with " + enemy.currentPokemon.pokemonMoves[0].moveName + " dealing " + damage + " damage!";
+            }                      
+            if (enemy.currentPokemon.pokemonMoves[0].statMove) {
+                enemy.currentPokemon.lowerStat(player.currentPokemon, enemy.currentPokemon.pokemonMoves[0]);
+                actionText1.text = "Enemy's " + enemy.currentPokemon.rorymonName + " Used: " + enemy.currentPokemon.pokemonMoves[0].moveName;
+                if (enemy.currentPokemon.pokemonMoves[0].stageToChange > 0) {
+                    actionText1.text = actionText1.text + " increasing ";
+                } else if (enemy.currentPokemon.pokemonMoves[0].stageToChange < 0) {
+                    actionText1.text = actionText1.text + " decreasing ";
+                }
+                if (enemy.currentPokemon.pokemonMoves[0].targetsOtherMon) {
+                    actionText1.text = actionText1.text + " Player's " + player.currentPokemon.rorymonName + "'s ";
+                } else if (!enemy.currentPokemon.pokemonMoves[0].targetsOtherMon) {
+                    actionText1.text = actionText1.text + " enemy's " + enemy.currentPokemon.rorymonName + "'s ";
+                }
+                actionText1.text = actionText1.text + enemy.currentPokemon.pokemonMoves[0].statToChange.ToString();
+            }          
 
             if (player.currentPokemon.currentHealth <= 0)
             {
@@ -292,12 +339,28 @@ public class BattleSystem : MonoBehaviour
             }
             else
             {
-                if (currentlySelectedMove.effect == moveEffect.offensive) {
+                if (currentlySelectedMove.attackingMove) {
                     damage = player.currentPokemon.calculateDamage(enemy.currentPokemon, currentlySelectedMove);
                     enemy.currentPokemon.currentHealth -= damage;
+                    actionText2.text = "Player's " + player.currentPokemon.name + " Attacked with " + currentlySelectedMove.moveName + " dealing " + damage + " damage!";
+                }
+                if (currentlySelectedMove.statMove) {
+                    player.currentPokemon.lowerStat(enemy.currentPokemon, currentlySelectedMove);
+                    actionText2.text = "Player's " + player.currentPokemon.rorymonName + " Used: " + currentlySelectedMove.moveName;
+                    if (currentlySelectedMove.stageToChange > 0) {
+                        actionText2.text = actionText2.text + " increasing ";
+                    } else if (currentlySelectedMove.stageToChange < 0) {
+                        actionText2.text = actionText2.text + " decreasing ";
+                    }
+                    if (currentlySelectedMove.targetsOtherMon) {
+                        actionText2.text = actionText2.text + " enemy's " + enemy.currentPokemon.rorymonName + "'s ";
+                    } else if (!currentlySelectedMove.targetsOtherMon) {
+                        actionText2.text = actionText2.text + " player's " + player.currentPokemon.rorymonName + "'s ";
+                    }
+                    actionText2.text = actionText1.text + currentlySelectedMove.statToChange.ToString();
                 }
 
-                actionText2.text = "Player's " + player.currentPokemon.name + " Attacked with " + currentlySelectedMove.moveName + " dealing " + damage + " damage!";
+                
                 if (enemy.currentPokemon.currentHealth <= 0)
                 {
                     enemy.currentPokemon.hasFainted = true;

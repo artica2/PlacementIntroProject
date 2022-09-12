@@ -2428,16 +2428,6 @@ MonoBehaviour:
   - {fileID: 2061657641}
   - {fileID: 793800722}
   - {fileID: 369853212}
-  move1: {fileID: 95340808}
-  move2: {fileID: 2061657641}
-  move3: {fileID: 793800722}
-  move4: {fileID: 369853212}
-  rorymon1: {fileID: 360365651}
-  rorymon2: {fileID: 98676349}
-  rorymon3: {fileID: 1241774665}
-  rorymon4: {fileID: 1696746763}
-  rorymon5: {fileID: 731345807}
-  rorymon6: {fileID: 53055630}
   rorymonNames:
   - {fileID: 360365651}
   - {fileID: 98676349}
@@ -2448,8 +2438,8 @@ MonoBehaviour:
   actionText1: {fileID: 1742810855}
   actionText2: {fileID: 74322895}
   state: 0
-  playerPrefab: {fileID: 4941552186798726107, guid: 172bb3cd31cef214a9d1cfc7b0503ff7, type: 3}
-  enemyPrefab: {fileID: 4138803731823304111, guid: 1de4ca33100a90243b558fdc576f58da, type: 3}
+  playerPrefab: {fileID: 111631123782627889, guid: 5f59d7b81c781184bb1430d6c5a19820, type: 3}
+  enemyPrefab: {fileID: 111631123782627889, guid: 5f59d7b81c781184bb1430d6c5a19820, type: 3}
 --- !u!4 &1966887166
 Transform:
   m_ObjectHideFlags: 0

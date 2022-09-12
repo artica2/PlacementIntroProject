@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum StatType { attackT, defenceT, specialAttackT, specialDefenceT, speedT }
+public enum StatType { attack, defence, specialAttack, specialDefence, speed }
 
 public class Stat
 {
