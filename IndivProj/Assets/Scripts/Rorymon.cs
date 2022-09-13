@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rorymon : MonoBehaviour
-{
+public class Rorymon : MonoBehaviour {
     public Move[] pokemonMoves = new Move[4];
 
     public Type rorymonType;
@@ -18,6 +17,8 @@ public class Rorymon : MonoBehaviour
     public float maxHealth;
     public float currentHealth;
 
+    public Move currentlySelectedMove;
+
 
     public Stat attack = new Stat();
     public Stat defence = new Stat();
@@ -27,8 +28,7 @@ public class Rorymon : MonoBehaviour
     public bool hasFainted;
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         currentHealth = maxHealth;
         hasFainted = false;
 
@@ -48,17 +48,15 @@ public class Rorymon : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         attack.UpdateStat();
         defence.UpdateStat();
         specialAttack.UpdateStat();
         specialDefence.UpdateStat();
-        speed.UpdateStat(); 
+        speed.UpdateStat();
     }
 
-    public float calculateDamage(Rorymon DefensiveMon, Move moveUsed)
-    {
+    public float calculateDamage(Rorymon DefensiveMon, Move moveUsed) {
         float damage = 0;
 
         if (moveUsed.isPhysical) {
@@ -66,7 +64,7 @@ public class Rorymon : MonoBehaviour
         } else {
             damage = specialAttack.value / DefensiveMon.specialDefence.value * moveUsed.movePower;
         }
-        
+
         Debug.Log("Damage calculated: " + damage);
 
         return damage;
@@ -111,4 +109,32 @@ public class Rorymon : MonoBehaviour
             }
         }
     }
+
+    public Move SelectMove(Rorymon enemyMon) {
+        float damage = 0f;
+        float highestDamage = 0f;
+        Move highestDamageMove = null;
+        List<Move> moves = new List<Move>();
+        for (int i = 0; i < 4; i++) {
+            if (pokemonMoves[i].attackingMove) {
+                damage = calculateDamage(enemyMon, pokemonMoves[i]);
+                if (damage > enemyMon.currentHealth) {
+                    return pokemonMoves[i];
+                }
+                if (damage > highestDamage) {
+                    highestDamage = damage;
+                    highestDamageMove = pokemonMoves[i];
+                }
+
+            } else {
+                moves.Add(pokemonMoves[i]);
+            }
+        }
+        moves.Add(highestDamageMove);
+        int dummy = Random.Range(0, (int)moves.Count);
+        return pokemonMoves[dummy];
+    }
 }
+
+
+

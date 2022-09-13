@@ -52,6 +52,7 @@ public class BattleSystem : MonoBehaviour
 
     // tracker bools for selecting moves and pokemon (and having this selection be displayed properly on the UI)
     private Move currentlySelectedMove;
+    private Move enemySelectedMove;
     private Rorymon selectedRorymon;
 
     // A sample of colors
@@ -193,7 +194,7 @@ public class BattleSystem : MonoBehaviour
         // enemy AI
         if (!enemyHasSelectedMove)
         {
-            enemy.enemyMoveSelect();
+            enemySelectedMove =  enemy.currentPokemon.SelectMove(player.currentPokemon);
             enemyHasSelectedMove = true;
         }
         // choose a move
@@ -265,28 +266,28 @@ public class BattleSystem : MonoBehaviour
           
             if (enemy.currentPokemon.currentHealth > 0) // if enemy is still alive to have their move
             {
-                if (enemy.currentPokemon.pokemonMoves[0].attackingMove) {
+                if (enemySelectedMove.attackingMove) {
                     // calculate and inflict damage to player pokemon
-                    damage = enemy.currentPokemon.calculateDamage(player.currentPokemon, enemy.currentPokemon.pokemonMoves[0]);
+                    damage = enemy.currentPokemon.calculateDamage(player.currentPokemon, enemySelectedMove);
                     player.currentPokemon.currentHealth -= damage;
                     // print to UI
-                    actionText2.text = "Enemy's " + enemy.currentPokemon.name + " Attacked with " + enemy.currentPokemon.pokemonMoves[0].moveName + " dealing " + damage + " damage!";
+                    actionText2.text = "Enemy's " + enemy.currentPokemon.name + " Attacked with " + enemySelectedMove.moveName + " dealing " + damage + " damage!";
 
                 }
-                if (enemy.currentPokemon.pokemonMoves[0].statMove) {
-                    enemy.currentPokemon.lowerStat(player.currentPokemon, enemy.currentPokemon.pokemonMoves[0]);
-                    actionText2.text = "Enemy's " + enemy.currentPokemon.rorymonName + " Used: " + enemy.currentPokemon.pokemonMoves[0].moveName;
-                    if (enemy.currentPokemon.pokemonMoves[0].stageToChange > 0) {
+                if (enemySelectedMove.statMove) {
+                    enemy.currentPokemon.lowerStat(player.currentPokemon, enemySelectedMove);
+                    actionText2.text = "Enemy's " + enemy.currentPokemon.rorymonName + " Used: " + enemySelectedMove.moveName;
+                    if (enemySelectedMove.stageToChange > 0) {
                         actionText2.text = actionText2.text + " increasing ";
-                    } else if (enemy.currentPokemon.pokemonMoves[0].stageToChange < 0) {
+                    } else if (enemySelectedMove.stageToChange < 0) {
                         actionText2.text = actionText2.text + " decreasing ";
                     }
-                    if (enemy.currentPokemon.pokemonMoves[0].targetsOtherMon) {
+                    if (enemySelectedMove.targetsOtherMon) {
                         actionText2.text = actionText2.text + " Player's " + player.currentPokemon.rorymonName + "'s ";
-                    } else if (!enemy.currentPokemon.pokemonMoves[0].targetsOtherMon) {
+                    } else if (!enemySelectedMove.targetsOtherMon) {
                         actionText2.text = actionText2.text + " enemy's " + enemy.currentPokemon.rorymonName + "'s ";
                     }
-                    actionText2.text = actionText2.text + enemy.currentPokemon.pokemonMoves[0].statToChange.ToString();
+                    actionText2.text = actionText2.text + enemySelectedMove.statToChange.ToString();
                 }
 
                 if(player.currentPokemon.currentHealth <= 0) // if the player pokemon has died
@@ -309,25 +310,25 @@ public class BattleSystem : MonoBehaviour
         }
         else // enemy is faster than player
         {
-            if (enemy.currentPokemon.pokemonMoves[0].attackingMove) {
-                damage = enemy.currentPokemon.calculateDamage(player.currentPokemon, enemy.currentPokemon.pokemonMoves[0]);
+            if (enemySelectedMove.attackingMove) {
+                damage = enemy.currentPokemon.calculateDamage(player.currentPokemon, enemySelectedMove);
                 player.currentPokemon.currentHealth -= damage;                
-                actionText1.text = "Enemy's " + enemy.currentPokemon.name + " Attacked with " + enemy.currentPokemon.pokemonMoves[0].moveName + " dealing " + damage + " damage!";
+                actionText1.text = "Enemy's " + enemy.currentPokemon.name + " Attacked with " + enemySelectedMove.moveName + " dealing " + damage + " damage!";
             }                      
-            if (enemy.currentPokemon.pokemonMoves[0].statMove) {
-                enemy.currentPokemon.lowerStat(player.currentPokemon, enemy.currentPokemon.pokemonMoves[0]);
-                actionText1.text = "Enemy's " + enemy.currentPokemon.rorymonName + " Used: " + enemy.currentPokemon.pokemonMoves[0].moveName;
-                if (enemy.currentPokemon.pokemonMoves[0].stageToChange > 0) {
+            if (enemySelectedMove.statMove) {
+                enemy.currentPokemon.lowerStat(player.currentPokemon, enemySelectedMove);
+                actionText1.text = "Enemy's " + enemy.currentPokemon.rorymonName + " Used: " + enemySelectedMove.moveName;
+                if (enemySelectedMove.stageToChange > 0) {
                     actionText1.text = actionText1.text + " increasing ";
-                } else if (enemy.currentPokemon.pokemonMoves[0].stageToChange < 0) {
+                } else if (enemySelectedMove.stageToChange < 0) {
                     actionText1.text = actionText1.text + " decreasing ";
                 }
-                if (enemy.currentPokemon.pokemonMoves[0].targetsOtherMon) {
+                if (enemySelectedMove.targetsOtherMon) {
                     actionText1.text = actionText1.text + " Player's " + player.currentPokemon.rorymonName + "'s ";
-                } else if (!enemy.currentPokemon.pokemonMoves[0].targetsOtherMon) {
+                } else if (!enemySelectedMove.targetsOtherMon) {
                     actionText1.text = actionText1.text + " enemy's " + enemy.currentPokemon.rorymonName + "'s ";
                 }
-                actionText1.text = actionText1.text + enemy.currentPokemon.pokemonMoves[0].statToChange.ToString();
+                actionText1.text = actionText1.text + enemySelectedMove.statToChange.ToString();
             }          
 
             if (player.currentPokemon.currentHealth <= 0)
@@ -370,6 +371,8 @@ public class BattleSystem : MonoBehaviour
                 }
             }
         }
+
+        Arena.instance.turnHasEnded = true;
         state = BattleState.MOVESELECT;
     }
 
@@ -454,6 +457,52 @@ public class BattleSystem : MonoBehaviour
         if(state == BattleState.NEXTPOKEMONSELECT) {
             
         }
+    }
+
+    private void ChangeArena(Move moveUsed, Rorymon DefensiveMon) {
+        if(moveUsed.changesArena) {
+            if(DefensiveMon == player.currentPokemon) {
+                if(moveUsed.arenaChange == ArenaChange.friendlyLightScreen) {
+                    Arena.instance.friendlyLightScreen = true;
+                    Arena.instance.friendlyLightScreenRemaining = 5;
+                }
+                else if (moveUsed.arenaChange == ArenaChange.enemyLightScreen) {
+                    Arena.instance.enemyLightScreen = true;
+                    Arena.instance.enemyLightScreenRemaining = 5;
+                } else if (moveUsed.arenaChange == ArenaChange.friendlyReflect) {
+                    Arena.instance.friendlyReflect = true;
+                    Arena.instance.friendlyReflectRemaining = 5;
+                } else if (moveUsed.arenaChange == ArenaChange.enemyReflect) {
+                    Arena.instance.enemyReflect = true;
+                    Arena.instance.enemyReflectRemaining = 5;
+                }
+            }else if (DefensiveMon == enemy.currentPokemon) {
+                if(moveUsed.arenaChange == ArenaChange.friendlyLightScreen) {
+                    Arena.instance.enemyLightScreen = true;
+                    Arena.instance.enemyLightScreenRemaining = 5;
+                } else if (moveUsed.arenaChange == ArenaChange.enemyLightScreen) {
+                    Arena.instance.friendlyLightScreen = true;
+                    Arena.instance.friendlyLightScreenRemaining = 5;
+                } else if (moveUsed.arenaChange == ArenaChange.friendlyReflect) {
+                    Arena.instance.enemyReflect = true;
+                    Arena.instance.enemyReflectRemaining = 5;
+                } else if (moveUsed.arenaChange == ArenaChange.enemyReflect) {
+                    Arena.instance.friendlyReflect = true;
+                    Arena.instance.friendlyReflectRemaining = 5;
+                }
+            }
+            if(moveUsed.arenaChange == ArenaChange.sun) {
+                Arena.instance.isRaining = false;
+                Arena.instance.isSunny = true;
+                Arena.instance.weatherTurnsRemaining = 5;
+            } else if (moveUsed.arenaChange == ArenaChange.rain) {
+                Arena.instance.isSunny = false;
+                Arena.instance.isRaining = true;
+                Arena.instance.weatherTurnsRemaining -= 5;
+            }
+        }
+
+
     }
 
 }
