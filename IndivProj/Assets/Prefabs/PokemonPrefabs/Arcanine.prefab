@@ -50,7 +50,10 @@ MonoBehaviour:
   - {fileID: -1362051777131734751, guid: 9b0f3402cf6381f4e92e5a9ec82e1ef8, type: 3}
   - {fileID: 0}
   rorymonType: {fileID: -646654282203595283, guid: 55834d06e7bab434cb9843b9f1ad4df1, type: 3}
+  isFriendlyMon: 0
   rorymonName: Arcanine
+  FrontalSprite: {fileID: 21300000, guid: a21a43b42a4dec34aa91757fb409c086, type: 3}
+  BackwardSprite: {fileID: 21300000, guid: 0a9d0687e00edd845adc0426ac1042f8, type: 3}
   attackStat: 110
   defenceStat: 80
   specialAttackStat: 100
@@ -58,4 +61,6 @@ MonoBehaviour:
   speedStat: 95
   maxHealth: 90
   currentHealth: 0
+  currentlySelectedMove: {fileID: 0}
+  level: 50
   hasFainted: 0

@@ -47,10 +47,13 @@ MonoBehaviour:
   pokemonMoves:
   - {fileID: -1362051777131734751, guid: 6fb7bf41a4316b2449c9643ee46c0ef1, type: 3}
   - {fileID: -1362051777131734751, guid: 19ba360926238c641ad0a93a38b4ec22, type: 3}
-  - {fileID: 0}
+  - {fileID: 8119636135198550120, guid: ff019b0b7c2d2ca488ff98d85da199ad, type: 3}
   - {fileID: 0}
   rorymonType: {fileID: -646654282203595283, guid: ae5a8e50c2610f9409a1b14fa3b61e46, type: 3}
+  isFriendlyMon: 0
   rorymonName: Exeggutor
+  FrontalSprite: {fileID: 21300000, guid: 677863f9ce824244c85b87bf6d260125, type: 3}
+  BackwardSprite: {fileID: 21300000, guid: eef7a49f8266cdb489fd5d32ad441861, type: 3}
   attackStat: 95
   defenceStat: 85
   specialAttackStat: 125
@@ -58,4 +61,6 @@ MonoBehaviour:
   speedStat: 55
   maxHealth: 95
   currentHealth: 0
+  currentlySelectedMove: {fileID: 0}
+  level: 50
   hasFainted: 0

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1744588199302683147}
   - component: {fileID: 3677926581853446220}
   m_Layer: 0
-  m_Name: Blue
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -58,4 +58,5 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  isPlayer: 1
   currentPokemon: {fileID: 0}

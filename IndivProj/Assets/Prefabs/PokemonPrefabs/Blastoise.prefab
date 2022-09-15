@@ -48,9 +48,12 @@ MonoBehaviour:
   - {fileID: -1362051777131734751, guid: c4a3d45fae8d8d64eb183778d5e60178, type: 3}
   - {fileID: -1362051777131734751, guid: 9b0f3402cf6381f4e92e5a9ec82e1ef8, type: 3}
   - {fileID: -1362051777131734751, guid: 12d43bdc342bd5046b0fedd5b9222bc8, type: 3}
-  - {fileID: 0}
+  - {fileID: 7886561872277439978, guid: f58f05c97e72e034285faab50d7fbe02, type: 3}
   rorymonType: {fileID: -646654282203595283, guid: 34574bcd9ba052449a3fb9fa45f3e82d, type: 3}
+  isFriendlyMon: 0
   rorymonName: Blastoise
+  FrontalSprite: {fileID: 21300000, guid: 62c194b5cb63ba34485102e16cbf00ed, type: 3}
+  BackwardSprite: {fileID: 21300000, guid: 2fd80554967c5224bb3585aa80b5210b, type: 3}
   attackStat: 83
   defenceStat: 100
   specialAttackStat: 85
@@ -58,4 +61,6 @@ MonoBehaviour:
   speedStat: 78
   maxHealth: 79
   currentHealth: 0
+  currentlySelectedMove: {fileID: 0}
+  level: 50
   hasFainted: 0

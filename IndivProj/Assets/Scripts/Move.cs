@@ -7,13 +7,14 @@ public enum ArenaChange { friendlyLightScreen, enemyLightScreen, friendlyReflect
 public class Move : MonoBehaviour
 {
     // Start is called before the first frame update
-
     public Type moveType;
     public string moveName;
     public bool attackingMove;
     public bool changesArena;
     public bool statMove;
     public float movePower;
+
+    public float accuracy;
 
     public bool isPhysical;
 
@@ -25,6 +26,8 @@ public class Move : MonoBehaviour
 
     public bool targetsOtherMon;
 
+
+
     void Start()
     {
 
@@ -34,30 +37,5 @@ public class Move : MonoBehaviour
     void Update()
     {
         
-    }
-
-    public float CalculateMultiplier(Rorymon rorymon) {
-
-        float multiplier = 1f;
-
-        foreach (Type T in moveType.effectiveAgainst) {
-            if (T == rorymon.rorymonType) {
-                multiplier *= 2f;
-            }
-        }
-
-        foreach (Type T in moveType.resistedBy) {
-            if (T == rorymon.rorymonType) {
-                multiplier *= 0.5f;
-            }
-        }
-
-        foreach (Type T in moveType.doesntAffect) {
-            if (T == rorymon.rorymonType) {
-                multiplier *= 0.0f;
-            }
-        }
-
-        return 0;
     }
 }

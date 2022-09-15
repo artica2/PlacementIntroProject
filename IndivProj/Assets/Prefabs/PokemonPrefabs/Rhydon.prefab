@@ -47,10 +47,13 @@ MonoBehaviour:
   pokemonMoves:
   - {fileID: -1362051777131734751, guid: ab6466bda3b6f454d9e609f45dd64687, type: 3}
   - {fileID: -1362051777131734751, guid: 02bc1635d56f86148ab626f59b5fde64, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: -8399602349283907565, guid: 3650163012fa8e0428b9c0e15a63bed0, type: 3}
+  - {fileID: -1362051777131734751, guid: ddd8b25c37f03c941af3e0ffa931bc83, type: 3}
   rorymonType: {fileID: -646654282203595283, guid: c9da8c93c780dc44b8467246118822cb, type: 3}
+  isFriendlyMon: 0
   rorymonName: Rhydon
+  FrontalSprite: {fileID: 21300000, guid: 4e1d3ef10d3a3374597ad3127b05822d, type: 3}
+  BackwardSprite: {fileID: 21300000, guid: dc02bf344e72dba46a7fceec07c33b62, type: 3}
   attackStat: 130
   defenceStat: 120
   specialAttackStat: 45
@@ -58,4 +61,6 @@ MonoBehaviour:
   speedStat: 40
   maxHealth: 105
   currentHealth: 0
+  currentlySelectedMove: {fileID: 0}
+  level: 50
   hasFainted: 0

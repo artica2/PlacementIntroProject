@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum StatType { attack, defence, specialAttack, specialDefence, speed }
+public enum StatType { attack, defence, specialAttack, specialDefence, speed, accuracy }
 
 public class Stat
 {
@@ -31,7 +31,16 @@ public class Stat
     }
 
     public void UpdateStat() {
+        if(stage < -6) {
+            stage = -6;
+        }
+        if(stage > 6) {
+            stage = 6;
+        }
+
         value = baseStat * Mathf.Pow(1.5f, stage);
+
+
     }
 
 }

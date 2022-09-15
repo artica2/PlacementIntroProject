@@ -9,6 +9,7 @@ public class Trainer : MonoBehaviour
 
     public Rorymon[] TrainerPokemon = new Rorymon[6];
 
+    public bool isPlayer;
 
     public Rorymon currentPokemon;
 
@@ -21,6 +22,11 @@ public class Trainer : MonoBehaviour
     public void CreateTrainer() {
         for (int i = 0; i < 6; i++) {
             TrainerPokemon[i] = Instantiate(pokemonPrefabs[i].GetComponent<Rorymon>());
+            if (isPlayer) {
+                TrainerPokemon[i].isFriendlyMon = true;
+            } else {
+                TrainerPokemon[i].isFriendlyMon = false;
+            }
         }
 
         currentPokemon = TrainerPokemon[0];

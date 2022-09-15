@@ -7,11 +7,15 @@ public enum BattleState { START, MOVESELECT, PERFORMINGMOVES, NEXTPOKEMONSELECT,
 
 public class BattleSystem : MonoBehaviour
 {
+    public bool crit;
     // text fields for the names of the trainer's Rorymons
     [SerializeField]
     private Text playerName;
     [SerializeField]
     private Text enemyName;
+
+    public Image friendlyMonImage;
+    public Image EnemyMonImage;
 
     // Sliders to display the health of each pokemon
     [SerializeField]
@@ -70,7 +74,8 @@ public class BattleSystem : MonoBehaviour
 
     private void Update()
     {
-        
+
+
         if (state == BattleState.START)
         {
             SetupBattle(); // set up the battle
@@ -90,6 +95,10 @@ public class BattleSystem : MonoBehaviour
             }
             // run the move select function
             MoveSelect();
+            if (player.currentPokemon && enemy.currentPokemon) {
+                friendlyMonImage.sprite = player.currentPokemon.BackwardSprite;
+                EnemyMonImage.sprite = enemy.currentPokemon.FrontalSprite;
+            }
         }
         if (state == BattleState.PERFORMINGMOVES)
         {
@@ -112,7 +121,7 @@ public class BattleSystem : MonoBehaviour
         }
 
         // Update the UI to reflect the game state
-        playerName.text = player.currentPokemon.rorymonName;
+        playerName.text = player.currentPokemon.rorymonName + "     " + player.currentPokemon.currentHealth + " / " + player.currentPokemon.maxHealth;
         enemyName.text = enemy.currentPokemon.rorymonName;
 
         playerHealth.value = player.currentPokemon.currentHealth / player.currentPokemon.maxHealth;
@@ -198,19 +207,19 @@ public class BattleSystem : MonoBehaviour
             enemyHasSelectedMove = true;
         }
         // choose a move
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha1) && player.currentPokemon.pokemonMoves[0] != null)
         {
             currentlySelectedMove = player.currentPokemon.pokemonMoves[0];
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && player.currentPokemon.pokemonMoves[1] != null)
         {
             currentlySelectedMove = player.currentPokemon.pokemonMoves[1];
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        else if (Input.GetKeyDown(KeyCode.Alpha3) && player.currentPokemon.pokemonMoves[2] != null)
         {
             currentlySelectedMove = player.currentPokemon.pokemonMoves[2];
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        else if (Input.GetKeyDown(KeyCode.Alpha4) && player.currentPokemon.pokemonMoves[3] != null)
         {
             currentlySelectedMove = player.currentPokemon.pokemonMoves[3];
         }
@@ -242,9 +251,16 @@ public class BattleSystem : MonoBehaviour
         {
             if (currentlySelectedMove.attackingMove) {
                 // calculate and inflict damage to enemy
-                damage = player.currentPokemon.calculateDamage(enemy.currentPokemon, currentlySelectedMove);
+                crit = Utility.instance.ProbabilityGenerator(6.25f);
+                damage = player.currentPokemon.calculateDamage(enemy.currentPokemon, currentlySelectedMove, crit);
                 enemy.currentPokemon.currentHealth -= damage;
-                actionText1.text = "Player's " + player.currentPokemon.rorymonName + " Attacked with " + currentlySelectedMove.moveName + " dealing " + damage + " damage!";
+                actionText1.text = "Player's " + player.currentPokemon.rorymonName;
+                if (crit) {
+                    actionText1.text += " Critted with: ";
+                } else {
+                    actionText1.text += " Attacked With: ";
+                }
+                actionText1.text += currentlySelectedMove.moveName + " dealing " + damage + " damage!";
 
             }
             if (currentlySelectedMove.statMove) {
@@ -260,19 +276,25 @@ public class BattleSystem : MonoBehaviour
                 } else if (!currentlySelectedMove.targetsOtherMon) {
                     actionText1.text = actionText1.text + " player's " + player.currentPokemon.rorymonName + "'s ";
                 }
-                actionText1.text = actionText1.text + currentlySelectedMove.statToChange.ToString();
-                   
+                actionText1.text = actionText1.text + currentlySelectedMove.statToChange.ToString();                 
             }        
           
             if (enemy.currentPokemon.currentHealth > 0) // if enemy is still alive to have their move
             {
                 if (enemySelectedMove.attackingMove) {
                     // calculate and inflict damage to player pokemon
-                    damage = enemy.currentPokemon.calculateDamage(player.currentPokemon, enemySelectedMove);
+                    crit = Utility.instance.ProbabilityGenerator(6.25f);
+                    damage = enemy.currentPokemon.calculateDamage(player.currentPokemon, enemySelectedMove, crit);
+
                     player.currentPokemon.currentHealth -= damage;
                     // print to UI
-                    actionText2.text = "Enemy's " + enemy.currentPokemon.name + " Attacked with " + enemySelectedMove.moveName + " dealing " + damage + " damage!";
-
+                    actionText2.text = "Enemy's " + enemy.currentPokemon.name;
+                    if (crit) {
+                        actionText2.text += " Critted with: ";
+                    } else {
+                        actionText2.text += " Attacked With: ";
+                    }
+                    actionText2.text += enemySelectedMove.moveName + " dealing " + damage + " damage!";
                 }
                 if (enemySelectedMove.statMove) {
                     enemy.currentPokemon.lowerStat(player.currentPokemon, enemySelectedMove);
@@ -311,9 +333,16 @@ public class BattleSystem : MonoBehaviour
         else // enemy is faster than player
         {
             if (enemySelectedMove.attackingMove) {
-                damage = enemy.currentPokemon.calculateDamage(player.currentPokemon, enemySelectedMove);
-                player.currentPokemon.currentHealth -= damage;                
-                actionText1.text = "Enemy's " + enemy.currentPokemon.name + " Attacked with " + enemySelectedMove.moveName + " dealing " + damage + " damage!";
+                crit = Utility.instance.ProbabilityGenerator(6.25f);
+                damage = enemy.currentPokemon.calculateDamage(player.currentPokemon, enemySelectedMove, crit);
+                player.currentPokemon.currentHealth -= damage;
+                actionText1.text = "Enemy's " + enemy.currentPokemon.rorymonName;
+                if (crit) {
+                    actionText1.text += " Critted with: ";
+                } else {
+                    actionText1.text += " Attacked With: ";
+                }
+                actionText1.text += enemySelectedMove.moveName + " dealing " + damage + " damage!";
             }                      
             if (enemySelectedMove.statMove) {
                 enemy.currentPokemon.lowerStat(player.currentPokemon, enemySelectedMove);
@@ -341,9 +370,17 @@ public class BattleSystem : MonoBehaviour
             else
             {
                 if (currentlySelectedMove.attackingMove) {
-                    damage = player.currentPokemon.calculateDamage(enemy.currentPokemon, currentlySelectedMove);
+                    crit = Utility.instance.ProbabilityGenerator(6.25f);
+                    crit = true;
+                    damage = player.currentPokemon.calculateDamage(enemy.currentPokemon, currentlySelectedMove, crit);
                     enemy.currentPokemon.currentHealth -= damage;
-                    actionText2.text = "Player's " + player.currentPokemon.name + " Attacked with " + currentlySelectedMove.moveName + " dealing " + damage + " damage!";
+                    actionText2.text = "Player's " + player.currentPokemon.name;
+                    if (crit) {
+                        actionText2.text += " Critted with: ";
+                    } else {
+                        actionText2.text += " Attacked With: ";
+                    }
+                    actionText2.text += currentlySelectedMove.moveName + " dealing " + damage + " damage!";
                 }
                 if (currentlySelectedMove.statMove) {
                     player.currentPokemon.lowerStat(enemy.currentPokemon, currentlySelectedMove);
@@ -360,8 +397,7 @@ public class BattleSystem : MonoBehaviour
                     }
                     actionText2.text = actionText1.text + currentlySelectedMove.statToChange.ToString();
                 }
-
-                
+               
                 if (enemy.currentPokemon.currentHealth <= 0)
                 {
                     enemy.currentPokemon.hasFainted = true;
@@ -371,7 +407,6 @@ public class BattleSystem : MonoBehaviour
                 }
             }
         }
-
         Arena.instance.turnHasEnded = true;
         state = BattleState.MOVESELECT;
     }
@@ -379,13 +414,11 @@ public class BattleSystem : MonoBehaviour
     void NextRorymon(bool TrainerPokemonFainted)
     {
         bool pokemonLeft = false;      
-
         if (TrainerPokemonFainted) {
             foreach(Rorymon rorymon in player.TrainerPokemon) {
                 if (!rorymon.hasFainted) {
                     pokemonLeft = true;
                 }
-
             }
             actionText1.text = "Currently Selected Pokemon: " + selectedRorymon;
 
@@ -407,19 +440,17 @@ public class BattleSystem : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Alpha6)) {
                 selectedRorymon = player.TrainerPokemon[5];
             }
-
             if (Input.GetKeyDown(KeyCode.Return) && !selectedRorymon.hasFainted) {
                 player.currentPokemon = selectedRorymon;
+                currentlySelectedMove = selectedRorymon.pokemonMoves[0];
                 state = BattleState.MOVESELECT;
             }
             else if (Input.GetKeyDown(KeyCode.Return) && selectedRorymon.hasFainted) {
                 actionText2.text = "That Rorymon has fainted! Choose another!";
             }
-
             if (!pokemonLeft) {
                 state = BattleState.LOST;
             }
-
             for (int i = 0; i < 6; i++) {
                 rorymonNames[i].text = player.TrainerPokemon[i].name;
                 if (player.TrainerPokemon[i] == selectedRorymon) {
@@ -429,7 +460,6 @@ public class BattleSystem : MonoBehaviour
                 } else {
                     rorymonNames[i].color = black;
                 }
-
             }
         }
         else if (!TrainerPokemonFainted) {
@@ -501,9 +531,11 @@ public class BattleSystem : MonoBehaviour
                 Arena.instance.weatherTurnsRemaining -= 5;
             }
         }
-
-
     }
+
+
+
+
 
 }
 
