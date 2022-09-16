@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4659778827199898537
+--- !u!1 &2209596463081506383
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1419645437027767248}
-  - component: {fileID: 7886561872277439978}
+  - component: {fileID: 7363546488655767552}
+  - component: {fileID: -8943479849401091860}
   m_Layer: 0
-  m_Name: Rain Dance
+  m_Name: Sand Attack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1419645437027767248
+--- !u!4 &7363546488655767552
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4659778827199898537}
+  m_GameObject: {fileID: 2209596463081506383}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -32,28 +32,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7886561872277439978
+--- !u!114 &-8943479849401091860
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4659778827199898537}
+  m_GameObject: {fileID: 2209596463081506383}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b99397afdfe4ec946b7e3df81bc4ada9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveType: {fileID: -646654282203595283, guid: 34574bcd9ba052449a3fb9fa45f3e82d, type: 3}
-  moveName: Rain Dance
+  moveType: {fileID: -646654282203595283, guid: c9da8c93c780dc44b8467246118822cb, type: 3}
+  moveName: Sand Attack
   attackingMove: 0
-  changesArena: 1
-  statMove: 0
+  changesArena: 0
+  statMove: 1
   movePower: 0
-  PP: 5
+  PP: 20
   accuracy: 100
   isPhysical: 0
-  statToChange: 0
-  arenaChange: 4
-  stageToChange: 0
-  targetsOtherMon: 0
+  statToChange: 5
+  arenaChange: 0
+  stageToChange: -1
+  targetsOtherMon: 1

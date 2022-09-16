@@ -47,5 +47,13 @@ MonoBehaviour:
   moveType: {fileID: -646654282203595283, guid: c9da8c93c780dc44b8467246118822cb, type: 3}
   moveName: Earthquake
   attackingMove: 1
+  changesArena: 0
+  statMove: 0
   movePower: 100
+  PP: 10
+  accuracy: 100
   isPhysical: 1
+  statToChange: 0
+  arenaChange: 0
+  stageToChange: 0
+  targetsOtherMon: 0

@@ -47,5 +47,13 @@ MonoBehaviour:
   moveType: {fileID: -646654282203595283, guid: 7fdb8aa5a4ddfef41982fc666fbad09e, type: 3}
   moveName: Bite
   attackingMove: 1
+  changesArena: 0
+  statMove: 0
   movePower: 60
+  PP: 25
+  accuracy: 100
   isPhysical: 1
+  statToChange: 0
+  arenaChange: 0
+  stageToChange: 0
+  targetsOtherMon: 0

@@ -47,5 +47,13 @@ MonoBehaviour:
   moveType: {fileID: -646654282203595283, guid: 18188cb5b207f0f4a82942282b31b4b1, type: 3}
   moveName: Rock Tomb
   attackingMove: 1
+  changesArena: 0
+  statMove: 0
   movePower: 60
+  PP: 15
+  accuracy: 95
   isPhysical: 1
+  statToChange: 0
+  arenaChange: 0
+  stageToChange: 0
+  targetsOtherMon: 0

@@ -47,9 +47,13 @@ MonoBehaviour:
   moveType: {fileID: -646654282203595283, guid: ef164119f83600c41b03c7a9b98328e3, type: 3}
   moveName: Feather Dance
   attackingMove: 0
+  changesArena: 0
   statMove: 1
   movePower: 0
+  PP: 15
+  accuracy: 100
   isPhysical: 0
   statToChange: 0
+  arenaChange: 0
   stageToChange: -2
   targetsOtherMon: 1

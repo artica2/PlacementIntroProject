@@ -47,5 +47,13 @@ MonoBehaviour:
   moveType: {fileID: -646654282203595283, guid: 36cac3d3609123b409a5554aa4956246, type: 3}
   moveName: Egg Bomb
   attackingMove: 1
+  changesArena: 0
+  statMove: 0
   movePower: 100
+  PP: 10
+  accuracy: 75
   isPhysical: 1
+  statToChange: 0
+  arenaChange: 0
+  stageToChange: 0
+  targetsOtherMon: 0

@@ -47,5 +47,13 @@ MonoBehaviour:
   moveType: {fileID: -646654282203595283, guid: 36cac3d3609123b409a5554aa4956246, type: 3}
   moveName: Take Down
   attackingMove: 1
+  changesArena: 0
+  statMove: 0
   movePower: 90
+  PP: 20
+  accuracy: 85
   isPhysical: 1
+  statToChange: 0
+  arenaChange: 0
+  stageToChange: 0
+  targetsOtherMon: 0

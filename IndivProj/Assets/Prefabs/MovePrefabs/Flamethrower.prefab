@@ -47,5 +47,13 @@ MonoBehaviour:
   moveType: {fileID: -646654282203595283, guid: 55834d06e7bab434cb9843b9f1ad4df1, type: 3}
   moveName: Flamethrower
   attackingMove: 1
+  changesArena: 0
+  statMove: 0
   movePower: 90
+  PP: 15
+  accuracy: 100
   isPhysical: 0
+  statToChange: 0
+  arenaChange: 0
+  stageToChange: 0
+  targetsOtherMon: 0

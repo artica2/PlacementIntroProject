@@ -44,10 +44,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e8c098aafb28b7409d6106b8b0963a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pokemonMoves:
+  pokemonMovesPrefabs:
   - {fileID: -1362051777131734751, guid: 34a8a218385993044a5b2b8ae4a86d7c, type: 3}
   - {fileID: -1362051777131734751, guid: b6ad90818ce8bbe428f35f204b8fc00c, type: 3}
   - {fileID: -1362051777131734751, guid: 9b0f3402cf6381f4e92e5a9ec82e1ef8, type: 3}
+  - {fileID: 0}
+  pokemonMoves:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 0}
   rorymonType: {fileID: -646654282203595283, guid: 55834d06e7bab434cb9843b9f1ad4df1, type: 3}
   isFriendlyMon: 0

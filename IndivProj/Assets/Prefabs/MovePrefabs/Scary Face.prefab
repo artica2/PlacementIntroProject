@@ -50,6 +50,8 @@ MonoBehaviour:
   changesArena: 0
   statMove: 1
   movePower: 0
+  PP: 10
+  accuracy: 100
   isPhysical: 0
   statToChange: 4
   arenaChange: 0

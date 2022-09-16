@@ -47,5 +47,13 @@ MonoBehaviour:
   moveType: {fileID: -646654282203595283, guid: 34574bcd9ba052449a3fb9fa45f3e82d, type: 3}
   moveName: Hydro Pump
   attackingMove: 1
+  changesArena: 0
+  statMove: 0
   movePower: 120
+  PP: 5
+  accuracy: 80
   isPhysical: 0
+  statToChange: 0
+  arenaChange: 0
+  stageToChange: 0
+  targetsOtherMon: 0

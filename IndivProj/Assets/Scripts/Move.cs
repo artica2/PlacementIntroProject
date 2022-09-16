@@ -14,6 +14,8 @@ public class Move : MonoBehaviour
     public bool statMove;
     public float movePower;
 
+    public int PP;
+
     public float accuracy;
 
     public bool isPhysical;

@@ -44,11 +44,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e8c098aafb28b7409d6106b8b0963a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pokemonMoves:
+  pokemonMovesPrefabs:
   - {fileID: -1362051777131734751, guid: c4a3d45fae8d8d64eb183778d5e60178, type: 3}
   - {fileID: -1362051777131734751, guid: 9b0f3402cf6381f4e92e5a9ec82e1ef8, type: 3}
   - {fileID: -1362051777131734751, guid: 12d43bdc342bd5046b0fedd5b9222bc8, type: 3}
   - {fileID: 7886561872277439978, guid: f58f05c97e72e034285faab50d7fbe02, type: 3}
+  pokemonMoves:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   rorymonType: {fileID: -646654282203595283, guid: 34574bcd9ba052449a3fb9fa45f3e82d, type: 3}
   isFriendlyMon: 0
   rorymonName: Blastoise

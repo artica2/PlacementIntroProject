@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Rorymon : MonoBehaviour {
+    public Move[] pokemonMovesPrefabs = new Move[4];
+
     public Move[] pokemonMoves = new Move[4];
 
     public Type rorymonType;
@@ -38,6 +40,12 @@ public class Rorymon : MonoBehaviour {
     void Start() {
         currentHealth = maxHealth;
         hasFainted = false;
+
+        for (int i = 0; i < 4; i++) {
+            if (pokemonMovesPrefabs[i]) {
+                pokemonMoves[i] = Instantiate(pokemonMovesPrefabs[i].GetComponent<Move>());
+            }
+        }
 
         attack.statType = StatType.attack;
         defence.statType = StatType.defence;
@@ -84,7 +92,6 @@ public class Rorymon : MonoBehaviour {
         } else {
             damage = (((((2 * level) * 0.2f) + 2) * moveUsed.movePower * (specialAttack.value / DefensiveMon.specialDefence.value)) / 50) + 2;
         }     
-            crit = Utility.instance.ProbabilityGenerator(6.25f);
 
         if (crit) {
             if (moveUsed.isPhysical) {
@@ -141,6 +148,13 @@ public class Rorymon : MonoBehaviour {
                     speed.stage += moveUsed.stageToChange;
                 }
             }
+            if (moveUsed.statToChange == StatType.accuracy) {
+                if (moveUsed.targetsOtherMon) {
+                    DefensiveMon.accuracy.stage += moveUsed.stageToChange;
+                } else {
+                    accuracy.stage += moveUsed.stageToChange;
+                }
+            }
         }
     }
 
@@ -151,7 +165,7 @@ public class Rorymon : MonoBehaviour {
         List<Move> moves = new List<Move>();
         for (int i = 0; i < 4; i++) {
             if (pokemonMoves[i]) {
-                if (pokemonMoves[i].attackingMove) {
+                if (pokemonMoves[i].attackingMove && pokemonMoves[i].PP > 0) {
                     damage = calculateDamage(enemyMon, pokemonMoves[i], false);
                     if (damage > enemyMon.currentHealth) {
                         return pokemonMoves[i];
@@ -161,12 +175,14 @@ public class Rorymon : MonoBehaviour {
                         highestDamageMove = pokemonMoves[i];
                     }
 
-                } else {
+                } else if (pokemonMoves[i].PP > 0) {
                     moves.Add(pokemonMoves[i]);
                 }
             }
         }
-        moves.Add(highestDamageMove);
+        if (highestDamageMove) {
+            moves.Add(highestDamageMove);
+        }
         int dummy = Random.Range(0, (int)moves.Count);
         return pokemonMoves[dummy];
     }

@@ -47,5 +47,13 @@ MonoBehaviour:
   moveType: {fileID: -646654282203595283, guid: 30094c74688d100478be2594ca6b3017, type: 3}
   moveName: Psychic
   attackingMove: 1
+  changesArena: 0
+  statMove: 0
   movePower: 90
+  PP: 10
+  accuracy: 100
   isPhysical: 0
+  statToChange: 0
+  arenaChange: 0
+  stageToChange: 0
+  targetsOtherMon: 0

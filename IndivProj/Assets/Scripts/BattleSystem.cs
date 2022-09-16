@@ -36,6 +36,8 @@ public class BattleSystem : MonoBehaviour
     private Text actionText1;
     [SerializeField]
     private Text actionText2;
+    [SerializeField]
+    private Text NextMonSelect;
 
     // a bool to be used in the event a pokemon faints. Tells the game whether the fainted pokemon is friendly or Computer operated
     bool TrainerPokemonFainted;
@@ -74,8 +76,6 @@ public class BattleSystem : MonoBehaviour
 
     private void Update()
     {
-
-
         if (state == BattleState.START)
         {
             SetupBattle(); // set up the battle
@@ -129,10 +129,10 @@ public class BattleSystem : MonoBehaviour
         // set the currently selected move to stand out as green 
         for (int i = 0; i < 4; i++) {
             if (player.currentPokemon.pokemonMoves[i]){
-            moveText[i].text = player.currentPokemon.pokemonMoves[i].moveName;
+            moveText[i].text = player.currentPokemon.pokemonMoves[i].moveName + "\n" + "PP: " + player.currentPokemon.pokemonMoves[i].PP;
 
             if (player.currentPokemon.pokemonMoves[i].attackingMove) {
-                moveText[i].text = moveText[i].text + "          " + player.currentPokemon.pokemonMoves[i].movePower;
+                moveText[i].text = moveText[i].text + "\n" + "Power: " + player.currentPokemon.pokemonMoves[i].movePower;
             }
 
             if (player.currentPokemon.pokemonMoves[i] == currentlySelectedMove) {
@@ -155,6 +155,7 @@ public class BattleSystem : MonoBehaviour
 
     void SetupBattle()
     {
+        NextMonSelect.text = " ";
         // create the player
         GameObject playerGO = Instantiate(playerPrefab);
         player = playerGO.GetComponent<Trainer>();
@@ -165,7 +166,6 @@ public class BattleSystem : MonoBehaviour
         {
             rorymon.currentHealth = rorymon.maxHealth;
         }
-
         // create the enemy
         GameObject enemyGO = Instantiate(enemyPrefab);
         enemy = enemyGO.GetComponent<Trainer>();
@@ -188,7 +188,6 @@ public class BattleSystem : MonoBehaviour
                 rorymonNames[i].color = black;
             } 
         }
-
         // Set the initial values of our variables
         enemyHasSelectedMove = false;
         state = BattleState.MOVESELECT;
@@ -203,8 +202,10 @@ public class BattleSystem : MonoBehaviour
         // enemy AI
         if (!enemyHasSelectedMove)
         {
-            enemySelectedMove =  enemy.currentPokemon.SelectMove(player.currentPokemon);
-            enemyHasSelectedMove = true;
+            enemySelectedMove =  enemy.currentPokemon.SelectMove(enemy.currentPokemon);
+            if (enemySelectedMove) {
+                enemyHasSelectedMove = true;
+            }
         }
         // choose a move
         if (Input.GetKeyDown(KeyCode.Alpha1) && player.currentPokemon.pokemonMoves[0] != null)
@@ -226,7 +227,12 @@ public class BattleSystem : MonoBehaviour
         // excecute the chosen move
         else if (Input.GetKeyDown(KeyCode.Space))
         {
-            state = BattleState.PERFORMINGMOVES;
+            if (currentlySelectedMove.PP <= 0) {
+                NextMonSelect.text = "That move is out of pp, choose another!";
+            } else {
+                state = BattleState.PERFORMINGMOVES;
+            }
+
         }      
 
     }
@@ -249,74 +255,86 @@ public class BattleSystem : MonoBehaviour
         // check which pokemon is faster
         if (playerMovesFirst)
         {
-            if (currentlySelectedMove.attackingMove) {
-                // calculate and inflict damage to enemy
-                crit = Utility.instance.ProbabilityGenerator(6.25f);
-                damage = player.currentPokemon.calculateDamage(enemy.currentPokemon, currentlySelectedMove, crit);
-                enemy.currentPokemon.currentHealth -= damage;
-                actionText1.text = "Player's " + player.currentPokemon.rorymonName;
-                if (crit) {
-                    actionText1.text += " Critted with: ";
-                } else {
-                    actionText1.text += " Attacked With: ";
-                }
-                actionText1.text += currentlySelectedMove.moveName + " dealing " + damage + " damage!";
+            bool attackHit = Utility.instance.ProbabilityGenerator(((player.currentPokemon.accuracy.value / 100) * (currentlySelectedMove.accuracy / 100)) * 100);
+            if (!attackHit) {
+                actionText1.text = "Players: " + player.currentPokemon.rorymonName + " used " + currentlySelectedMove.moveName + ", but it missed!";
+            } else {
+                if (currentlySelectedMove.attackingMove) {
+                    // calculate and inflict damage to enemy
+                    crit = Utility.instance.ProbabilityGenerator(6.25f);
+                    damage = player.currentPokemon.calculateDamage(enemy.currentPokemon, currentlySelectedMove, crit);
+                    enemy.currentPokemon.currentHealth -= damage;
+                    actionText1.text = "Player's " + player.currentPokemon.rorymonName;
+                    if (crit) {
+                        actionText1.text += " Critted with: ";
+                    } else {
+                        actionText1.text += " Attacked With: ";
+                    }
+                    actionText1.text += currentlySelectedMove.moveName + " dealing " + damage + " damage!";
 
+                }
+                if (currentlySelectedMove.statMove) {
+                    player.currentPokemon.lowerStat(enemy.currentPokemon, currentlySelectedMove);
+                    actionText1.text = "Player's " + player.currentPokemon.rorymonName + " Used: " + currentlySelectedMove.moveName;
+                    if (currentlySelectedMove.stageToChange > 0) {
+                        actionText1.text = actionText1.text + " increasing ";
+                    } else if (currentlySelectedMove.stageToChange < 0) {
+                        actionText1.text = actionText1.text + " decreasing ";
+                    }
+                    if (currentlySelectedMove.targetsOtherMon) {
+                        actionText1.text = actionText1.text + " enemy's " + enemy.currentPokemon.rorymonName + "'s ";
+                    } else if (!currentlySelectedMove.targetsOtherMon) {
+                        actionText1.text = actionText1.text + " player's " + player.currentPokemon.rorymonName + "'s ";
+                    }
+                    actionText1.text = actionText1.text + currentlySelectedMove.statToChange.ToString();
+                }
             }
-            if (currentlySelectedMove.statMove) {
-                player.currentPokemon.lowerStat(enemy.currentPokemon, currentlySelectedMove);
-                actionText1.text = "Player's " + player.currentPokemon.rorymonName + " Used: " + currentlySelectedMove.moveName;
-                if (currentlySelectedMove.stageToChange > 0) {
-                    actionText1.text = actionText1.text + " increasing ";
-                } else if (currentlySelectedMove.stageToChange < 0) {
-                    actionText1.text = actionText1.text + " decreasing ";
-                }
-                if (currentlySelectedMove.targetsOtherMon) {
-                    actionText1.text = actionText1.text + " enemy's " + enemy.currentPokemon.rorymonName + "'s ";
-                } else if (!currentlySelectedMove.targetsOtherMon) {
-                    actionText1.text = actionText1.text + " player's " + player.currentPokemon.rorymonName + "'s ";
-                }
-                actionText1.text = actionText1.text + currentlySelectedMove.statToChange.ToString();                 
-            }        
-          
+            currentlySelectedMove.PP--;
             if (enemy.currentPokemon.currentHealth > 0) // if enemy is still alive to have their move
             {
-                if (enemySelectedMove.attackingMove) {
-                    // calculate and inflict damage to player pokemon
-                    crit = Utility.instance.ProbabilityGenerator(6.25f);
-                    damage = enemy.currentPokemon.calculateDamage(player.currentPokemon, enemySelectedMove, crit);
+                float dummy = ((enemy.currentPokemon.accuracy.value / 100) * (enemySelectedMove.accuracy / 100)) * 100;
+                attackHit = Utility.instance.ProbabilityGenerator(((enemy.currentPokemon.accuracy.value / 100) * (enemySelectedMove.accuracy / 100)) * 100);
+                if (!attackHit) {
+                    actionText2.text = "Enemies: " + enemy.currentPokemon.rorymonName + " used " + enemySelectedMove.moveName + ", but it missed!";
+                } else {
+                    if (enemySelectedMove.attackingMove) {
+                        // calculate and inflict damage to player pokemon
+                        crit = Utility.instance.ProbabilityGenerator(6.25f);
+                        damage = enemy.currentPokemon.calculateDamage(player.currentPokemon, enemySelectedMove, crit);
 
-                    player.currentPokemon.currentHealth -= damage;
-                    // print to UI
-                    actionText2.text = "Enemy's " + enemy.currentPokemon.name;
-                    if (crit) {
-                        actionText2.text += " Critted with: ";
-                    } else {
-                        actionText2.text += " Attacked With: ";
+                        player.currentPokemon.currentHealth -= damage;
+                        // print to UI
+                        actionText2.text = "Enemy's " + enemy.currentPokemon.name;
+                        if (crit) {
+                            actionText2.text += " Critted with: ";
+                        } else {
+                            actionText2.text += " Attacked With: ";
+                        }
+                        actionText2.text += enemySelectedMove.moveName + " dealing " + damage + " damage!";
                     }
-                    actionText2.text += enemySelectedMove.moveName + " dealing " + damage + " damage!";
+                    if (enemySelectedMove.statMove) {
+                        enemy.currentPokemon.lowerStat(player.currentPokemon, enemySelectedMove);
+                        actionText2.text = "Enemy's " + enemy.currentPokemon.rorymonName + " Used: " + enemySelectedMove.moveName;
+                        if (enemySelectedMove.stageToChange > 0) {
+                            actionText2.text = actionText2.text + " increasing ";
+                        } else if (enemySelectedMove.stageToChange < 0) {
+                            actionText2.text = actionText2.text + " decreasing ";
+                        }
+                        if (enemySelectedMove.targetsOtherMon) {
+                            actionText2.text = actionText2.text + " Player's " + player.currentPokemon.rorymonName + "'s ";
+                        } else if (!enemySelectedMove.targetsOtherMon) {
+                            actionText2.text = actionText2.text + " enemy's " + enemy.currentPokemon.rorymonName + "'s ";
+                        }
+                        actionText2.text = actionText2.text + enemySelectedMove.statToChange.ToString();
+                    }
                 }
-                if (enemySelectedMove.statMove) {
-                    enemy.currentPokemon.lowerStat(player.currentPokemon, enemySelectedMove);
-                    actionText2.text = "Enemy's " + enemy.currentPokemon.rorymonName + " Used: " + enemySelectedMove.moveName;
-                    if (enemySelectedMove.stageToChange > 0) {
-                        actionText2.text = actionText2.text + " increasing ";
-                    } else if (enemySelectedMove.stageToChange < 0) {
-                        actionText2.text = actionText2.text + " decreasing ";
-                    }
-                    if (enemySelectedMove.targetsOtherMon) {
-                        actionText2.text = actionText2.text + " Player's " + player.currentPokemon.rorymonName + "'s ";
-                    } else if (!enemySelectedMove.targetsOtherMon) {
-                        actionText2.text = actionText2.text + " enemy's " + enemy.currentPokemon.rorymonName + "'s ";
-                    }
-                    actionText2.text = actionText2.text + enemySelectedMove.statToChange.ToString();
-                }
-
+                enemySelectedMove.PP--;
                 if(player.currentPokemon.currentHealth <= 0) // if the player pokemon has died
                 {
                     // move to the pokemon selection state with appropriate tracker variables
                     player.currentPokemon.hasFainted = true;
                     TrainerPokemonFainted = true;
+                    enemyHasSelectedMove = false;
                     state = BattleState.NEXTPOKEMONSELECT;
                     return;
                 }               
@@ -326,87 +344,100 @@ public class BattleSystem : MonoBehaviour
                 // move to pokemon selection with appropriate tracker variables
                 TrainerPokemonFainted = false;
                 enemy.currentPokemon.hasFainted = true;
+                enemyHasSelectedMove = false;
                 state = BattleState.NEXTPOKEMONSELECT;
                 return;
             }            
         }
         else // enemy is faster than player
         {
-            if (enemySelectedMove.attackingMove) {
-                crit = Utility.instance.ProbabilityGenerator(6.25f);
-                damage = enemy.currentPokemon.calculateDamage(player.currentPokemon, enemySelectedMove, crit);
-                player.currentPokemon.currentHealth -= damage;
-                actionText1.text = "Enemy's " + enemy.currentPokemon.rorymonName;
-                if (crit) {
-                    actionText1.text += " Critted with: ";
-                } else {
-                    actionText1.text += " Attacked With: ";
+            bool attackHit = Utility.instance.ProbabilityGenerator(((enemy.currentPokemon.accuracy.value / 100) * (enemySelectedMove.accuracy / 100)) * 100);
+            if (!attackHit) {
+                actionText1.text = "Enemies: " + enemy.currentPokemon.rorymonName + " used " + enemySelectedMove.moveName + ", but it missed!";
+            } else {
+                if (enemySelectedMove.attackingMove) {
+                    crit = Utility.instance.ProbabilityGenerator(6.25f);
+                    damage = enemy.currentPokemon.calculateDamage(player.currentPokemon, enemySelectedMove, crit);
+                    player.currentPokemon.currentHealth -= damage;
+                    actionText1.text = "Enemy's " + enemy.currentPokemon.rorymonName;
+                    if (crit) {
+                        actionText1.text += " Critted with: ";
+                    } else {
+                        actionText1.text += " Attacked With: ";
+                    }
+                    actionText1.text += enemySelectedMove.moveName + " dealing " + damage + " damage!";
                 }
-                actionText1.text += enemySelectedMove.moveName + " dealing " + damage + " damage!";
-            }                      
-            if (enemySelectedMove.statMove) {
-                enemy.currentPokemon.lowerStat(player.currentPokemon, enemySelectedMove);
-                actionText1.text = "Enemy's " + enemy.currentPokemon.rorymonName + " Used: " + enemySelectedMove.moveName;
-                if (enemySelectedMove.stageToChange > 0) {
-                    actionText1.text = actionText1.text + " increasing ";
-                } else if (enemySelectedMove.stageToChange < 0) {
-                    actionText1.text = actionText1.text + " decreasing ";
+                if (enemySelectedMove.statMove) {
+                    enemy.currentPokemon.lowerStat(player.currentPokemon, enemySelectedMove);
+                    actionText1.text = "Enemy's " + enemy.currentPokemon.rorymonName + " Used: " + enemySelectedMove.moveName;
+                    if (enemySelectedMove.stageToChange > 0) {
+                        actionText1.text = actionText1.text + " increasing ";
+                    } else if (enemySelectedMove.stageToChange < 0) {
+                        actionText1.text = actionText1.text + " decreasing ";
+                    }
+                    if (enemySelectedMove.targetsOtherMon) {
+                        actionText1.text = actionText1.text + " Player's " + player.currentPokemon.rorymonName + "'s ";
+                    } else if (!enemySelectedMove.targetsOtherMon) {
+                        actionText1.text = actionText1.text + " enemy's " + enemy.currentPokemon.rorymonName + "'s ";
+                    }
+                    actionText1.text = actionText1.text + enemySelectedMove.statToChange.ToString();
                 }
-                if (enemySelectedMove.targetsOtherMon) {
-                    actionText1.text = actionText1.text + " Player's " + player.currentPokemon.rorymonName + "'s ";
-                } else if (!enemySelectedMove.targetsOtherMon) {
-                    actionText1.text = actionText1.text + " enemy's " + enemy.currentPokemon.rorymonName + "'s ";
-                }
-                actionText1.text = actionText1.text + enemySelectedMove.statToChange.ToString();
-            }          
-
+            }
+            enemySelectedMove.PP--;
             if (player.currentPokemon.currentHealth <= 0)
             {
                 player.currentPokemon.hasFainted = true;
                 TrainerPokemonFainted = true;
+                enemyHasSelectedMove = false;
                 state = BattleState.NEXTPOKEMONSELECT;
                 return;
             }
             else
             {
-                if (currentlySelectedMove.attackingMove) {
-                    crit = Utility.instance.ProbabilityGenerator(6.25f);
-                    crit = true;
-                    damage = player.currentPokemon.calculateDamage(enemy.currentPokemon, currentlySelectedMove, crit);
-                    enemy.currentPokemon.currentHealth -= damage;
-                    actionText2.text = "Player's " + player.currentPokemon.name;
-                    if (crit) {
-                        actionText2.text += " Critted with: ";
-                    } else {
-                        actionText2.text += " Attacked With: ";
+                attackHit = Utility.instance.ProbabilityGenerator(((player.currentPokemon.accuracy.value / 100) * (currentlySelectedMove.accuracy / 100)) * 100);
+                if (!attackHit) {
+                    actionText2.text = "Players: " + player.currentPokemon.rorymonName + " used " + currentlySelectedMove.moveName + ", but it missed!";
+                } else {
+                    if (currentlySelectedMove.attackingMove) {
+                        crit = Utility.instance.ProbabilityGenerator(6.25f);
+                        damage = player.currentPokemon.calculateDamage(enemy.currentPokemon, currentlySelectedMove, crit);
+                        enemy.currentPokemon.currentHealth -= damage;
+                        actionText2.text = "Player's " + player.currentPokemon.name;
+                        if (crit) {
+                            actionText2.text += " Critted with: ";
+                        } else {
+                            actionText2.text += " Attacked With: ";
+                        }
+                        actionText2.text += currentlySelectedMove.moveName + " dealing " + damage + " damage!";
                     }
-                    actionText2.text += currentlySelectedMove.moveName + " dealing " + damage + " damage!";
+                    if (currentlySelectedMove.statMove) {
+                        player.currentPokemon.lowerStat(enemy.currentPokemon, currentlySelectedMove);
+                        actionText2.text = "Player's " + player.currentPokemon.rorymonName + " Used: " + currentlySelectedMove.moveName;
+                        if (currentlySelectedMove.stageToChange > 0) {
+                            actionText2.text = actionText2.text + " increasing ";
+                        } else if (currentlySelectedMove.stageToChange < 0) {
+                            actionText2.text = actionText2.text + " decreasing ";
+                        }
+                        if (currentlySelectedMove.targetsOtherMon) {
+                            actionText2.text = actionText2.text + " enemy's " + enemy.currentPokemon.rorymonName + "'s ";
+                        } else if (!currentlySelectedMove.targetsOtherMon) {
+                            actionText2.text = actionText2.text + " player's " + player.currentPokemon.rorymonName + "'s ";
+                        }
+                        actionText2.text = actionText2.text + currentlySelectedMove.statToChange.ToString();
+                    }
                 }
-                if (currentlySelectedMove.statMove) {
-                    player.currentPokemon.lowerStat(enemy.currentPokemon, currentlySelectedMove);
-                    actionText2.text = "Player's " + player.currentPokemon.rorymonName + " Used: " + currentlySelectedMove.moveName;
-                    if (currentlySelectedMove.stageToChange > 0) {
-                        actionText2.text = actionText2.text + " increasing ";
-                    } else if (currentlySelectedMove.stageToChange < 0) {
-                        actionText2.text = actionText2.text + " decreasing ";
-                    }
-                    if (currentlySelectedMove.targetsOtherMon) {
-                        actionText2.text = actionText2.text + " enemy's " + enemy.currentPokemon.rorymonName + "'s ";
-                    } else if (!currentlySelectedMove.targetsOtherMon) {
-                        actionText2.text = actionText2.text + " player's " + player.currentPokemon.rorymonName + "'s ";
-                    }
-                    actionText2.text = actionText1.text + currentlySelectedMove.statToChange.ToString();
-                }
-               
+                currentlySelectedMove.PP--;
                 if (enemy.currentPokemon.currentHealth <= 0)
                 {
                     enemy.currentPokemon.hasFainted = true;
                     TrainerPokemonFainted = false;
+                    enemyHasSelectedMove = false;
                     state = BattleState.NEXTPOKEMONSELECT;
                     return;
                 }
             }
         }
+        enemyHasSelectedMove = false;
         Arena.instance.turnHasEnded = true;
         state = BattleState.MOVESELECT;
     }
@@ -420,7 +451,7 @@ public class BattleSystem : MonoBehaviour
                     pokemonLeft = true;
                 }
             }
-            actionText1.text = "Currently Selected Pokemon: " + selectedRorymon;
+            NextMonSelect.text = "Your pokemon Fainted! Choose which one to send out next!";
 
             if (Input.GetKeyDown(KeyCode.Alpha1)) {
                 selectedRorymon = player.TrainerPokemon[0];
@@ -446,7 +477,7 @@ public class BattleSystem : MonoBehaviour
                 state = BattleState.MOVESELECT;
             }
             else if (Input.GetKeyDown(KeyCode.Return) && selectedRorymon.hasFainted) {
-                actionText2.text = "That Rorymon has fainted! Choose another!";
+                NextMonSelect.text = "That Rorymon has fainted and cant be sent out! Choose another!";
             }
             if (!pokemonLeft) {
                 state = BattleState.LOST;
